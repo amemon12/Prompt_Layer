@@ -4,6 +4,21 @@ Refine your AI prompts before sending them — directly from ChatGPT, Claude.ai,
 
 ---
 
+## About
+
+Most people type a prompt and hit send. Prompt Layer adds a step in between.
+
+It's a Chrome extension that sits inside your AI interface and rewrites your prompt — making it clearer, more specific, and more likely to get a great response — before it ever reaches the model. One click, no copy-pasting, no switching tabs.
+
+Under the hood it uses Claude to do the refinement, guided by a system prompt you control. There's also a standalone FastAPI backend that exposes the same refinement logic as an API, so you can wire it into any tool or workflow you're already building.
+
+**What it solves:**
+- Vague prompts that produce generic answers
+- Time spent manually rewriting the same prompt multiple times
+- The gap between what you mean and what the model understands
+
+---
+
 ## How to Use
 
 ### 1. Set up the backend
