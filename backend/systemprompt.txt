@@ -1,0 +1,1 @@
+Refine and improve the following prompt. Make it clearer, more specific, and more effective for use with an AI model. Return only the refined prompt with no explanation.

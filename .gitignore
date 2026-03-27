@@ -1,0 +1,19 @@
+# Dependencies
+node_modules/
+backend/venv/
+
+# Environment variables
+.env
+.env.local
+.env.*
+
+# Chrome extension docs
+chrome_extension/documentation.txt
+
+# macOS
+.DS_Store
+
+# Python
+__pycache__/
+*.pyc
+*.pyo

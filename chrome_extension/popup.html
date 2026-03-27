@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Prompt Layer</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      width: 300px;
+      background: #0f0f0f;
+      color: #e8e8e8;
+    }
+
+    /* ── Header ── */
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 18px 14px;
+      border-bottom: 1px solid #1e1e1e;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .logo-icon {
+      font-size: 16px;
+      line-height: 1;
+    }
+
+    .logo-text {
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+      color: #fff;
+    }
+
+    .settings-icon-btn {
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: #666;
+      padding: 4px;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      transition: color 0.15s, background 0.15s;
+    }
+
+    .settings-icon-btn:hover {
+      color: #ccc;
+      background: #1e1e1e;
+    }
+
+    /* ── Main view ── */
+    .main-body {
+      padding: 20px 18px;
+    }
+
+    .status-card {
+      background: #161616;
+      border: 1px solid #222;
+      border-radius: 10px;
+      padding: 14px 16px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .status-dot.ready    { background: #3ecf8e; box-shadow: 0 0 6px #3ecf8e88; }
+    .status-dot.warning  { background: #f5a623; box-shadow: 0 0 6px #f5a62388; }
+    .status-dot.disabled { background: #555; }
+
+    .status-label {
+      font-size: 13px;
+      color: #aaa;
+    }
+
+    .status-label strong {
+      display: block;
+      font-size: 14px;
+      color: #e8e8e8;
+      font-weight: 500;
+      margin-bottom: 2px;
+    }
+
+    .hint {
+      margin-top: 16px;
+      font-size: 12px;
+      color: #555;
+      line-height: 1.5;
+      text-align: center;
+    }
+
+    /* ── Settings view ── */
+    .settings-body {
+      padding: 18px;
+    }
+
+    .back-btn {
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: #666;
+      font-size: 12px;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      padding: 0;
+      margin-bottom: 18px;
+      transition: color 0.15s;
+    }
+
+    .back-btn:hover { color: #ccc; }
+
+    .settings-title {
+      font-size: 15px;
+      font-weight: 600;
+      color: #fff;
+      margin-bottom: 18px;
+    }
+
+    .field {
+      margin-bottom: 16px;
+    }
+
+    .field label {
+      display: block;
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: #555;
+      margin-bottom: 7px;
+    }
+
+    .field input[type="password"],
+    .field input[type="text"] {
+      width: 100%;
+      background: #161616;
+      border: 1px solid #2a2a2a;
+      border-radius: 8px;
+      padding: 9px 12px;
+      color: #e8e8e8;
+      font-size: 13px;
+      outline: none;
+      transition: border-color 0.15s;
+    }
+
+    .field input:focus {
+      border-color: #444;
+    }
+
+    .field input::placeholder {
+      color: #3a3a3a;
+    }
+
+    /* Toggle switch */
+    .toggle-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #161616;
+      border: 1px solid #2a2a2a;
+      border-radius: 8px;
+      padding: 10px 12px;
+    }
+
+    .toggle-row span {
+      font-size: 13px;
+      color: #ccc;
+    }
+
+    .switch {
+      position: relative;
+      width: 36px;
+      height: 20px;
+      flex-shrink: 0;
+    }
+
+    .switch input { display: none; }
+
+    .slider {
+      position: absolute;
+      inset: 0;
+      background: #2a2a2a;
+      border-radius: 20px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .slider::before {
+      content: '';
+      position: absolute;
+      width: 14px;
+      height: 14px;
+      left: 3px;
+      top: 3px;
+      background: #666;
+      border-radius: 50%;
+      transition: transform 0.2s, background 0.2s;
+    }
+
+    .switch input:checked + .slider { background: #1a3a2a; }
+    .switch input:checked + .slider::before {
+      transform: translateX(16px);
+      background: #3ecf8e;
+    }
+
+    .save-btn {
+      width: 100%;
+      background: #1a1a1a;
+      border: 1px solid #2e2e2e;
+      border-radius: 8px;
+      color: #e8e8e8;
+      font-size: 13px;
+      font-weight: 500;
+      padding: 10px;
+      cursor: pointer;
+      margin-top: 4px;
+      transition: background 0.15s, border-color 0.15s;
+    }
+
+    .save-btn:hover {
+      background: #242424;
+      border-color: #3a3a3a;
+    }
+
+    .save-message {
+      margin-top: 10px;
+      font-size: 12px;
+      color: #3ecf8e;
+      text-align: center;
+      min-height: 16px;
+    }
+
+    .hidden { display: none; }
+  </style>
+</head>
+
+<body>
+
+  <!-- MAIN VIEW -->
+  <div id="mainView">
+    <div class="header">
+      <div class="logo">
+        <span class="logo-icon">✦</span>
+        <span class="logo-text">Prompt Layer</span>
+      </div>
+      <button class="settings-icon-btn" id="settingsBtn" title="Settings">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+        </svg>
+      </button>
+    </div>
+
+    <div class="main-body">
+      <div class="status-card">
+        <div class="status-dot" id="statusDot"></div>
+        <div class="status-label">
+          <strong id="statusTitle">Loading…</strong>
+          <span id="statusText"></span>
+        </div>
+      </div>
+      <p class="hint">Open ChatGPT or Claude and look for the<br>✦ Refine button near the prompt input.</p>
+    </div>
+  </div>
+
+  <!-- SETTINGS VIEW -->
+  <div id="settingsView" class="hidden">
+    <div class="settings-body">
+      <button class="back-btn" id="backBtn">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+        Back
+      </button>
+
+      <div class="settings-title">Settings</div>
+
+      <div class="field">
+        <label>Claude API Key</label>
+        <input type="password" id="apiKeyInput" placeholder="sk-ant-..." />
+      </div>
+
+      <div class="field">
+        <div class="toggle-row">
+          <span>Enable Prompt Layer</span>
+          <label class="switch">
+            <input type="checkbox" id="enabledToggle" />
+            <span class="slider"></span>
+          </label>
+        </div>
+      </div>
+
+      <button class="save-btn" id="saveBtn">Save Settings</button>
+      <p class="save-message" id="saveMessage"></p>
+    </div>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>
